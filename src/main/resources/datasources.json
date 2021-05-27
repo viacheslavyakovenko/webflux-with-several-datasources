@@ -1,0 +1,237 @@
+{
+    "source": "mockoon:1.13.0",
+    "data": [
+        {
+            "type": "environment",
+            "item": {
+                "uuid": "",
+                "lastMigration": 13,
+                "name": "user-service",
+                "endpointPrefix": "",
+                "latency": 0,
+                "port": 3001,
+                "routes": [
+                    {
+                        "uuid": "",
+                        "documentation": "",
+                        "method": "get",
+                        "endpoint": "user",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "    {\n      \"userId\": \"{{ faker 'random.number' min=10000 max=100000 }}\",\n      \"firstName\": \"{{ faker 'name.firstName' }}\",\n      \"lastName\": \"{{ faker 'name.lastName' }}\"\n    }\n",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "",
+                                "headers": [],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false
+                    }
+                ],
+                "proxyMode": false,
+                "proxyHost": "",
+                "https": false,
+                "cors": true,
+                "headers": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "proxyReqHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ],
+                "proxyResHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "environment",
+            "item": {
+                "uuid": "",
+                "lastMigration": 13,
+                "name": "creditcard-service",
+                "endpointPrefix": "",
+                "latency": 0,
+                "port": 3002,
+                "routes": [
+                    {
+                        "uuid": "",
+                        "documentation": "",
+                        "method": "get",
+                        "endpoint": "creditcard",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "    {\n      \"userId\": \"{{ faker 'random.number' min=10000 max=100000 }}\",\n      \"cardNo\": \"{{ faker 'random.number' min=1111111111111111 max=9999999999999999 }}\"\n    }\n",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "",
+                                "headers": [],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false
+                    }
+                ],
+                "proxyMode": false,
+                "proxyHost": "",
+                "https": false,
+                "cors": true,
+                "headers": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "proxyReqHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ],
+                "proxyResHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "environment",
+            "item": {
+                "uuid": "",
+                "lastMigration": 13,
+                "name": "book-service",
+                "endpointPrefix": "",
+                "latency": 0,
+                "port": 3003,
+                "routes": [
+                    {
+                        "uuid": "",
+                        "documentation": "",
+                        "method": "get",
+                        "endpoint": "book",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "    {\n      \"bookId\": \"{{ faker 'random.number' min=10000 max=100000 }}\",\n      \"authorName\": \"{{ faker 'name.firstName' }} {{ faker 'name.lastName' }}\",\n      \"title\": \"{{ oneOf (array 'Sixes and Sevens' 'Heart of the West' 'The Four Million') }}\"  \n    }\n",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "",
+                                "headers": [],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false
+                    }
+                ],
+                "proxyMode": false,
+                "proxyHost": "",
+                "https": false,
+                "cors": true,
+                "headers": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "proxyReqHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ],
+                "proxyResHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ]
+            }
+        },
+        {
+            "type": "environment",
+            "item": {
+                "uuid": "",
+                "lastMigration": 13,
+                "name": "statistic-service",
+                "endpointPrefix": "",
+                "latency": 0,
+                "port": 3004,
+                "routes": [
+                    {
+                        "uuid": "",
+                        "documentation": "",
+                        "method": "get",
+                        "endpoint": "statistic",
+                        "responses": [
+                            {
+                                "uuid": "",
+                                "body": "    {\n      \"bookId\": \"{{ faker 'random.number' min=10000 max=100000 }}\",\n      \"count\": \"{{ faker 'random.number' min=10 max=100 }}\"\n    }\n",
+                                "latency": 0,
+                                "statusCode": 200,
+                                "label": "",
+                                "headers": [],
+                                "filePath": "",
+                                "sendFileAsBody": false,
+                                "rules": [],
+                                "rulesOperator": "OR",
+                                "disableTemplating": false
+                            }
+                        ],
+                        "enabled": true,
+                        "randomResponse": false
+                    }
+                ],
+                "proxyMode": false,
+                "proxyHost": "",
+                "https": false,
+                "cors": true,
+                "headers": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                    }
+                ],
+                "proxyReqHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ],
+                "proxyResHeaders": [
+                    {
+                        "key": "",
+                        "value": ""
+                    }
+                ]
+            }
+        }
+    ]
+}
