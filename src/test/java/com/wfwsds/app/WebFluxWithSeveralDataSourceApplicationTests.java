@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -17,11 +18,20 @@ public class WebFluxWithSeveralDataSourceApplicationTests {
   ProductService productService;
 
   @Test
-  public void showProductDto() {
+  public void tesProductDto() {
 
-    System.out.println(" *** \n");
     Mono<ProductDto> mono = productService.process();
-    mono.subscribe(System.out::println);
+    StepVerifier.create(mono.log())
+        .expectNextMatches(productDto -> productDto.toString().startsWith("ProductDto{"))
+        .verifyComplete();
   }
 
+  @Test
+  public void testCreditCardHiddenDigits() {
+
+    Mono<ProductDto> mono = productService.process();
+    StepVerifier.create(mono.log())
+        .expectNextMatches(productDto -> productDto.toString().contains("cardNo='**** **** ****"))
+        .verifyComplete();
+  }
 }
