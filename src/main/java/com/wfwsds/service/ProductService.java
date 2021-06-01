@@ -4,26 +4,26 @@ import com.wfwsds.adapter.ExternalDataAdapterContext;
 import com.wfwsds.model.ErrorRes;
 import com.wfwsds.model.ExternalDataRes;
 import com.wfwsds.model.ProductDto;
+import com.wfwsds.model.UserReq;
+import com.wfwsds.util.ConnectionFactory;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import reactor.core.Scannable;
 import reactor.core.publisher.Mono;
 
 @Service
 public class ProductService {
 
-  private final ApplicationContext context;
   private final ExternalDataAdapterContext externalDataAdapterContext;
+  private final ConnectionFactory connectionFactory;
 
   @Autowired
-  public ProductService(ApplicationContext context,
-      ExternalDataAdapterContext externalDataAdapterContext) {
+  public ProductService(ExternalDataAdapterContext externalDataAdapterContext,
+      ConnectionFactory connectionFactory) {
 
-    this.context = context;
     this.externalDataAdapterContext = externalDataAdapterContext;
+    this.connectionFactory = connectionFactory;
 
   }
 
@@ -47,10 +47,12 @@ public class ProductService {
 
     List<Mono<ExternalDataRes>> monos = new ArrayList<>();
 
-    monos.add((Mono<ExternalDataRes>) context.getBean("MonoUserRes"));
-    monos.add((Mono<ExternalDataRes>) context.getBean("MonoStatisticRes"));
-    monos.add((Mono<ExternalDataRes>) context.getBean("MonoCreditCardRes"));
-    monos.add((Mono<ExternalDataRes>) context.getBean("MonoBookRes"));
+//    monos.add((Mono<ExternalDataRes>) context.getBean("MonoUserRes"));
+    monos.add((Mono<ExternalDataRes>) connectionFactory
+        .postUserData(new UserReq("100500", "testName", "testLastName")));
+    monos.add((Mono<ExternalDataRes>) connectionFactory.statisticData());
+    monos.add((Mono<ExternalDataRes>) connectionFactory.creditCardData());
+    monos.add((Mono<ExternalDataRes>) connectionFactory.bookData());
 
     return monos;
   }
