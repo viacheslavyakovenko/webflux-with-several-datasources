@@ -7,7 +7,6 @@ import com.wfwsds.model.StatisticRes;
 import com.wfwsds.model.UserReq;
 import com.wfwsds.model.UserRes;
 import java.time.Duration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
