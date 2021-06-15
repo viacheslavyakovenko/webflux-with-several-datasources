@@ -20,15 +20,25 @@ public class ProductService {
 
   private static final String ADAPTER_SUFFIX = "Adapter";
 
-  private final ApplicationContext context;
   private final ConnectionFactory connectionFactory;
+
+  private final Function<ExternalDataRes, ExternalDataResAdapter> resolveAdapter;
+  private final UnaryOperator<ExternalDataRes> postProcess;
+  private final Function<ExternalDataRes, Mono<ExternalDataRes>> postProcessAndWrapWithMono;
 
   @Autowired
   public ProductService(ApplicationContext context,
       ConnectionFactory connectionFactory) {
 
-    this.context = context;
     this.connectionFactory = connectionFactory;
+
+    this.resolveAdapter = v ->
+        ((ExternalDataResAdapter) context.getBean(v.getClass().getSimpleName()
+            + ADAPTER_SUFFIX));
+    this.postProcess = response ->
+        resolveAdapter.apply(response).postProcess(response);
+    this.postProcessAndWrapWithMono = response ->
+        Mono.just(postProcess.apply(response));
 
   }
 
@@ -66,29 +76,17 @@ public class ProductService {
 
     ProductDto productDto = new ProductDto();
 
-    Function<ExternalDataRes, ExternalDataResAdapter> resolveAdapter = v ->
-        ((ExternalDataResAdapter) context.getBean(v.getClass().getSimpleName()
-            + ADAPTER_SUFFIX));
-
-    UnaryOperator<ExternalDataRes> postProcess = response ->
-        resolveAdapter.apply(response).postProcess(response);
-
-    Function<ExternalDataRes, Mono<ExternalDataRes>> postProcessAndWrapWithMono = response ->
-        Mono.just(postProcess.apply(response));
-
-    // Error handling how-to: https://www.baeldung.com/spring-webflux-errors
     try {
       monos.parallelStream().forEach(
           mono -> mono
               .log()
+              // Error handling how-to: https://www.baeldung.com/spring-webflux-errors
               .onErrorReturn(new ErrorRes("Put error message here"))
               .flatMap(  // postprocessing example - UpperCase for Users names
                   postProcessAndWrapWithMono
               )
-              .subscribe(
-                  value -> { // start parallel calls
-                    productDto.concat(value.toString()); // aggregation example
-                  }
+              .subscribe( // start parallel calls
+                  productDto::concat // aggregation example
               )
       );
       monos.parallelStream().forEach(Mono::block); // join analog
@@ -98,5 +96,4 @@ public class ProductService {
     }
     return Mono.just(productDto);
   }
-
 }
