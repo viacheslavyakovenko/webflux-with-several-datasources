@@ -1,6 +1,5 @@
 package com.wfwsds.service;
 
-import ch.qos.logback.core.boolex.EvaluationException;
 import com.wfwsds.adapter.ExternalDataResAdapter;
 import com.wfwsds.model.ErrorRes;
 import com.wfwsds.model.ExternalDataRes;
@@ -79,23 +78,21 @@ public class ProductService {
 
     // Error handling how-to: https://www.baeldung.com/spring-webflux-errors
     try {
-      for (Mono<ExternalDataRes> mono : monos) {
-        mono
-            .log()
-            .onErrorReturn(new ErrorRes("Put error message here"))
-            .flatMap(  // postprocessing example - UpperCase for Users names
-                postProcessAndWrapWithMono
-            )
-            .subscribe(
-                value -> { // start parallel calls
-                  productDto.concat(value.toString()); // aggregation example
-                }
-            );
-      }
+      monos.parallelStream().forEach(
+          mono -> mono
+              .log()
+              .onErrorReturn(new ErrorRes("Put error message here"))
+              .flatMap(  // postprocessing example - UpperCase for Users names
+                  postProcessAndWrapWithMono
+              )
+              .subscribe(
+                  value -> { // start parallel calls
+                    productDto.concat(value.toString()); // aggregation example
+                  }
+              )
+      );
+      monos.parallelStream().forEach(Mono::block); // join analog
 
-      for (Mono<? extends ExternalDataRes> mono : monos) { // join analog
-        mono.block();
-      }
     } catch (RuntimeException re) {
       // Nothing to do here for this example
     }
