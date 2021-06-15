@@ -1,6 +1,7 @@
 package com.wfwsds.service;
 
-import com.wfwsds.adapter.ExternalDataAdapterContext;
+import ch.qos.logback.core.boolex.EvaluationException;
+import com.wfwsds.adapter.ExternalDataResAdapter;
 import com.wfwsds.model.ErrorRes;
 import com.wfwsds.model.ExternalDataRes;
 import com.wfwsds.model.ProductDto;
@@ -8,21 +9,26 @@ import com.wfwsds.model.UserReq;
 import com.wfwsds.util.ConnectionFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
 public class ProductService {
 
-  private final ExternalDataAdapterContext externalDataAdapterContext;
+  private static final String ADAPTER_SUFFIX = "Adapter";
+
+  private final ApplicationContext context;
   private final ConnectionFactory connectionFactory;
 
   @Autowired
-  public ProductService(ExternalDataAdapterContext externalDataAdapterContext,
+  public ProductService(ApplicationContext context,
       ConnectionFactory connectionFactory) {
 
-    this.externalDataAdapterContext = externalDataAdapterContext;
+    this.context = context;
     this.connectionFactory = connectionFactory;
 
   }
@@ -61,27 +67,33 @@ public class ProductService {
 
     ProductDto productDto = new ProductDto();
 
+    Function<ExternalDataRes, ExternalDataResAdapter> resolveAdapter = v ->
+        ((ExternalDataResAdapter) context.getBean(v.getClass().getSimpleName()
+            + ADAPTER_SUFFIX));
+
+    UnaryOperator<ExternalDataRes> postProcess = response ->
+        resolveAdapter.apply(response).postProcess(response);
+
+    Function<ExternalDataRes, Mono<ExternalDataRes>> postProcessAndWrapWithMono = response ->
+        Mono.just(postProcess.apply(response));
+
     // Error handling how-to: https://www.baeldung.com/spring-webflux-errors
     try {
-
       for (Mono<ExternalDataRes> mono : monos) {
         mono
             .log()
             .onErrorReturn(new ErrorRes("Put error message here"))
-            .flatMap(
-                value -> Mono.just(externalDataAdapterContext
-                    .postProcess(value))) // postprocessing example - UpperCase for Users names
+            .flatMap(  // postprocessing example - UpperCase for Users names
+                postProcessAndWrapWithMono
+            )
             .subscribe(
                 value -> { // start parallel calls
                   productDto.concat(value.toString()); // aggregation example
                 }
-//                , error -> {
-//                  productDto.concat(new ErrorRes("Error can be handled here also!").toString());
-//                }
             );
       }
 
-      for (Mono<? extends ExternalDataRes> mono : monos) {
+      for (Mono<? extends ExternalDataRes> mono : monos) { // join analog
         mono.block();
       }
     } catch (RuntimeException re) {
