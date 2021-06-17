@@ -1,4 +1,4 @@
-# webflux-with-several-datasources-
+# webflux-with-sevAeral-datasources-
 How-to work with several data sources and WebFlux
 
 1. Install https://mockoon.com/
@@ -9,3 +9,5 @@ How-to work with several data sources and WebFlux
 5. Start experimenting
 
 Enjoy
+
+![Class Diagram](img/class-diagram.png)

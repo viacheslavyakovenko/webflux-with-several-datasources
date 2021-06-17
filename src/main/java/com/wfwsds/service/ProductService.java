@@ -5,7 +5,6 @@ import com.wfwsds.model.ErrorRes;
 import com.wfwsds.model.ExternalDataRes;
 import com.wfwsds.model.ProductDto;
 import com.wfwsds.model.UserReq;
-import com.wfwsds.util.ConnectionFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -62,7 +61,6 @@ public class ProductService {
 
     List<Mono<ExternalDataRes>> monos = new ArrayList<>();
 
-//    monos.add((Mono<ExternalDataRes>) context.getBean("MonoUserRes"));
     monos.add((Mono<ExternalDataRes>) connectionFactory
         .postUserData(new UserReq("100500", "testName", "testLastName")));
     monos.add((Mono<ExternalDataRes>) connectionFactory.statisticData());
