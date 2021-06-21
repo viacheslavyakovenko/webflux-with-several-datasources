@@ -33,7 +33,7 @@ monos.add(monoOfBook);
 monos.add(monoOfAuthor);
 …
 ```
-It looks like I need something common for Mono<AuthorRes> & Mono<BookRes> & etc. This is how the marker interface [ExternalDataRes](/blob/main/src/main/java/com/wfwsds/model/ExternalDataRes.java) appeared.
+It looks like I need something common for Mono<AuthorRes> & Mono<BookRes> & etc. This is how the marker interface [ExternalDataRes](https://github.com/viacheslavyakovenko/webflux-with-several-datasources/blob/main/src/main/java/com/wfwsds/model/ExternalDataRes.java) appeared.
 
 It helps me to work with all responses from different data-sources in a common style. So, pretty soon a connections factory appeared in my code [ConnectionFactory](https://github.com/viacheslavyakovenko/webflux-with-several-datasources/blob/main/src/main/java/com/wfwsds/util/ConnectionFactory.java) , which help me to achieve needed list of Monos easily.
 
