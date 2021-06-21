@@ -1,19 +1,16 @@
 package com.wfwsds.app;
 
-import com.wfwsds.model.ErrorRes;
 import com.wfwsds.model.ExternalDataRes;
 import com.wfwsds.model.ProductDto;
 import com.wfwsds.model.UserReq;
-import com.wfwsds.model.UserRes;
 import com.wfwsds.service.ProductService;
-import com.wfwsds.util.ConnectionFactory;
+import com.wfwsds.service.ConnectionFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import reactor.core.Disposable;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 

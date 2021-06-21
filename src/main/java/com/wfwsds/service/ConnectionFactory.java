@@ -1,4 +1,4 @@
-package com.wfwsds.util;
+package com.wfwsds.service;
 
 import com.wfwsds.model.BookRes;
 import com.wfwsds.model.CreditCardRes;
