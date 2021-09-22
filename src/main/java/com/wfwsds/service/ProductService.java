@@ -6,6 +6,7 @@ import com.wfwsds.model.ExternalDataRes;
 import com.wfwsds.model.ProductDto;
 import com.wfwsds.model.UserReq;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @Service
 public class ProductService {
@@ -23,7 +25,6 @@ public class ProductService {
 
   private final Function<ExternalDataRes, ExternalDataResAdapter> resolveAdapter;
   private final UnaryOperator<ExternalDataRes> postProcess;
-  private final Function<ExternalDataRes, Mono<ExternalDataRes>> postProcessAndWrapWithMono;
 
   @Autowired
   public ProductService(ApplicationContext context,
@@ -36,9 +37,6 @@ public class ProductService {
             + ADAPTER_SUFFIX));
     this.postProcess = response ->
         resolveAdapter.apply(response).postProcess(response);
-    this.postProcessAndWrapWithMono = response ->
-        Mono.just(postProcess.apply(response));
-
   }
 
   public Mono<ProductDto> process() {
@@ -72,26 +70,19 @@ public class ProductService {
 
   private Mono<ProductDto> aggregateResults(List<Mono<ExternalDataRes>> monos) {
 
-    ProductDto productDto = new ProductDto();
+    return Mono.zip(monos,
+        resArray -> {
 
-    try {
-      monos.parallelStream().forEach(
-          mono -> mono
-              .log()
-              // Error handling how-to: https://www.baeldung.com/spring-webflux-errors
-              .onErrorReturn(new ErrorRes("Put error message here"))
-              .flatMap(  // postprocessing example - UpperCase for Users names
-                  postProcessAndWrapWithMono
-              )
-              .subscribe( // start parallel calls
-                  productDto::concat // aggregation example
-              )
-      );
-      monos.parallelStream().forEach(Mono::block); // join analog
+          ProductDto productDto = new ProductDto();
+          for (Object o : resArray) {
+            if (o instanceof ExternalDataRes){
+              ExternalDataRes res = (ExternalDataRes) o;
+              productDto.concat(postProcess.apply(res));
+            }
+          }
+          return productDto;
+        }
+    );
 
-    } catch (RuntimeException re) {
-      // Nothing to do here for this example
-    }
-    return Mono.just(productDto);
   }
 }

@@ -2,6 +2,7 @@ package com.wfwsds.service;
 
 import com.wfwsds.model.BookRes;
 import com.wfwsds.model.CreditCardRes;
+import com.wfwsds.model.ErrorRes;
 import com.wfwsds.model.ExternalDataRes;
 import com.wfwsds.model.StatisticRes;
 import com.wfwsds.model.UserReq;
@@ -31,9 +32,17 @@ public class ConnectionFactory {
 
   public Mono<? extends ExternalDataRes> bookData() {
     WebClient client = WebClient.create("http://127.0.0.1:3003");
-    return client.get().uri("/book").retrieve().bodyToMono(BookRes.class)
-        .timeout(Duration.ofMillis(1000L)).subscribeOn(
-            Schedulers.elastic());
+    return client
+        .get()
+        .uri("/book")
+        .retrieve()
+        .bodyToMono(BookRes.class)
+        .log("WebClient.book")
+        .timeout(Duration.ofMillis(1000L))
+        .onErrorResume(throwable -> {
+          return Mono.just(BookRes.BOOK_RES_ERROR);
+        })
+        .subscribeOn(Schedulers.elastic());
   }
 
   public Mono<? extends ExternalDataRes> statisticData() {
