@@ -1,12 +1,10 @@
 package com.wfwsds.service;
 
 import com.wfwsds.adapter.ExternalDataResAdapter;
-import com.wfwsds.model.ErrorRes;
 import com.wfwsds.model.ExternalDataRes;
 import com.wfwsds.model.ProductDto;
 import com.wfwsds.model.UserReq;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
 @Service
 public class ProductService {
@@ -70,19 +67,20 @@ public class ProductService {
 
   private Mono<ProductDto> aggregateResults(List<Mono<ExternalDataRes>> monos) {
 
-    return Mono.zip(monos,
+    return Mono.zip(
+        monos,
         resArray -> {
 
           ProductDto productDto = new ProductDto();
           for (Object o : resArray) {
-            if (o instanceof ExternalDataRes){
+            if (o instanceof ExternalDataRes) {
               ExternalDataRes res = (ExternalDataRes) o;
               productDto.concat(postProcess.apply(res));
             }
           }
           return productDto;
         }
-    );
+    ).log("mono.zip");
 
   }
 }

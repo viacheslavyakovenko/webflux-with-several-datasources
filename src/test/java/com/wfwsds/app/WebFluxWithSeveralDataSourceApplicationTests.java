@@ -22,9 +22,6 @@ public class WebFluxWithSeveralDataSourceApplicationTests {
   ProductService productService;
 
   @Autowired
-  ApplicationContext context;
-
-  @Autowired
   ConnectionFactory connectionFactory;
 
   @Test
