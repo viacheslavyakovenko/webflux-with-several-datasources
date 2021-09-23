@@ -39,15 +39,13 @@ public class ProductService {
   public Mono<ProductDto> process() {
 
     // TODO: 1. set up monos list which will be called in parallel
-    //  based on Req & CustomerConfiguration information
+    //  based on Req & additional information
     List<Mono<ExternalDataRes>> monos = setUpMonosList(/*req, customerConfig, etc.*/);
 
-    // TODO: 2. make a call for CreditFile (to DataService Layer)
-    // TODO: 3. make a parallel calls to External Data Sources
+    // TODO: 2. make a call to external data source
     Mono<ProductDto> mono = aggregateResults(monos);
-    // TODO: 4. set up processor list based on Req, CustomerConfiguration information and CreditFile
-    // TODO: 5. make a call for External Data Sources dependant on CreditFile
-    // TODO: 6. aggregate the resulted monos into ProductDto
+    // TODO: 3. set up processor list based on Req
+    // TODO: 4. aggregate the resulted monos into ProductDto
 
     return mono;
   }
