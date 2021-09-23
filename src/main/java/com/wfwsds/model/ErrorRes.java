@@ -2,7 +2,7 @@ package com.wfwsds.model;
 
 public class ErrorRes implements ExternalDataRes{
 
-  private String errorMsg;
+  private String errorMsg = "default message";
 
   public ErrorRes(){
     super();

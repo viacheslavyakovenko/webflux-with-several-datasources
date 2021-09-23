@@ -17,7 +17,8 @@ public class ConnectionFactory {
 
   public Mono<? extends ExternalDataRes> userData() {
     WebClient client = WebClient.create("http://127.0.0.1:3001");
-    return client.get().uri("/user").retrieve().bodyToMono(UserRes.class)
+    return client
+        .get().uri("/user").retrieve().bodyToMono(UserRes.class)
         .timeout(Duration.ofMillis(1000L)).subscribeOn(
             Schedulers.elastic());
   }
@@ -31,9 +32,17 @@ public class ConnectionFactory {
 
   public Mono<? extends ExternalDataRes> bookData() {
     WebClient client = WebClient.create("http://127.0.0.1:3003");
-    return client.get().uri("/book").retrieve().bodyToMono(BookRes.class)
-        .timeout(Duration.ofMillis(1000L)).subscribeOn(
-            Schedulers.elastic());
+    return client
+        .get()
+        .uri("/book")
+        .retrieve()
+        .bodyToMono(BookRes.class)
+        .log("WebClient.book")
+        .timeout(Duration.ofMillis(1000L))
+        .onErrorResume(throwable -> {
+          return Mono.just(BookRes.BOOK_RES_ERROR);
+        })
+        .subscribeOn(Schedulers.elastic());
   }
 
   public Mono<? extends ExternalDataRes> statisticData() {
@@ -52,6 +61,7 @@ public class ConnectionFactory {
         .body(Mono.just(userReq), UserReq.class)
         .retrieve()
         .bodyToMono(UserRes.class)
+        .log("WebClient.user.post")
         .timeout(Duration.ofMillis(1000L))
         .subscribeOn(Schedulers.elastic());
 

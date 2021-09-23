@@ -2,6 +2,9 @@ package com.wfwsds.model;
 
 public class BookRes implements ExternalDataRes {
 
+  public static final BookRes BOOK_RES_ERROR
+      = new BookRes(-999, "Contains error", "Contains error");
+
   private Integer bookId;
   private String authorName;
   private String title;
