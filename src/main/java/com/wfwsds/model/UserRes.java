@@ -2,9 +2,13 @@ package com.wfwsds.model;
 
 public class UserRes implements ExternalDataRes {
 
+  public static final UserRes USER_RES_ERROR
+      = new UserRes(Errors.DEFAULT);
+
   private String userId;
   private String firstName;
   private String lastName;
+  private Errors errors;
 
   public UserRes() {
     super();
@@ -14,6 +18,10 @@ public class UserRes implements ExternalDataRes {
     this.userId = userId;
     this.firstName = firstName;
     this.lastName = lastName;
+  }
+
+  public UserRes(Errors errors) {
+    this.errors = errors;
   }
 
   public String getUserId() {
@@ -28,8 +36,18 @@ public class UserRes implements ExternalDataRes {
     return lastName;
   }
 
+  public Errors getErrors() {
+    return errors;
+  }
+
   @Override
   public String toString() {
+
+    if (this.errors != null && this.errors.isError()) {
+      return "UserRes{"
+          + this.errors + "}";
+    }
+
     return "UserRes{" +
         "userId='" + userId + '\'' +
         ", firstName='" + firstName + '\'' +
