@@ -18,16 +18,47 @@ public class ConnectionFactory {
   public Mono<? extends ExternalDataRes> userData() {
     WebClient client = WebClient.create("http://127.0.0.1:3001");
     return client
-        .get().uri("/user").retrieve().bodyToMono(UserRes.class)
-        .timeout(Duration.ofMillis(1000L)).subscribeOn(
-            Schedulers.elastic());
+        .get()
+        .uri("/user")
+        .retrieve()
+        .bodyToMono(UserRes.class)
+        .timeout(Duration.ofMillis(1000L))
+        .onErrorResume(throwable -> {
+          return Mono.just(UserRes.USER_RES_ERROR);
+        })
+        .subscribeOn(Schedulers.elastic());
+  }
+
+  public Mono<? extends ExternalDataRes> postUserData(UserReq userReq) {
+
+    WebClient client = WebClient.create("http://127.0.0.1:3001");
+    Mono<UserRes> userResMono = client.post()
+        .uri("/user/add")
+        .body(Mono.just(userReq), UserReq.class)
+        .retrieve()
+        .bodyToMono(UserRes.class)
+        .log("WebClient.user.post")
+        .timeout(Duration.ofMillis(1000L))
+        .onErrorResume(throwable -> {
+          return Mono.just(UserRes.USER_RES_ERROR);
+        })
+        .subscribeOn(Schedulers.elastic());
+
+    return (Mono<? extends ExternalDataRes>) userResMono;
   }
 
   public Mono<? extends ExternalDataRes> creditCardData() {
     WebClient client = WebClient.create("http://127.0.0.1:3002");
-    return client.get().uri("/creditcard").retrieve().bodyToMono(CreditCardRes.class)
-        .timeout(Duration.ofMillis(1000L)).subscribeOn(
-            Schedulers.elastic());
+    return client
+        .get()
+        .uri("/creditcard")
+        .retrieve()
+        .bodyToMono(CreditCardRes.class)
+        .timeout(Duration.ofMillis(1000L))
+        .onErrorResume(throwable -> {
+          return Mono.just(CreditCardRes.CC_RES_ERROR);
+        })
+        .subscribeOn(Schedulers.elastic());
   }
 
   public Mono<? extends ExternalDataRes> bookData() {
@@ -47,25 +78,16 @@ public class ConnectionFactory {
 
   public Mono<? extends ExternalDataRes> statisticData() {
     WebClient client = WebClient.create("http://127.0.0.1:3004");
-    return client.get().uri("/statistic").retrieve().bodyToMono(StatisticRes.class)
-        .timeout(Duration.ofMillis(1000L)).subscribeOn(
-            Schedulers.elastic());
-  }
-
-  public Mono<? extends ExternalDataRes> postUserData(UserReq userReq) {
-
-    WebClient client = WebClient.create("http://127.0.0.1:3001");
-
-    Mono<UserRes> userResMono = client.post()
-        .uri("/user/add")
-        .body(Mono.just(userReq), UserReq.class)
+    return client
+        .get()
+        .uri("/statistic")
         .retrieve()
-        .bodyToMono(UserRes.class)
-        .log("WebClient.user.post")
+        .bodyToMono(StatisticRes.class)
         .timeout(Duration.ofMillis(1000L))
+        .onErrorResume(throwable -> {
+          return Mono.just(StatisticRes.STATISTIC_RES_ERROR);
+        })
         .subscribeOn(Schedulers.elastic());
-
-    return (Mono<? extends ExternalDataRes>) userResMono;
   }
 
 }

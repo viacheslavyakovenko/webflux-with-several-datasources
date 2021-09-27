@@ -3,7 +3,9 @@ package com.wfwsds.model;
 import java.util.ArrayList;
 import java.util.List;
 
-class Errors {
+public class Errors {
+
+  public static Errors DEFAULT = new Errors("Contains error!");
 
   private final List<String> errorsList;
 
@@ -13,7 +15,7 @@ class Errors {
     this.errorsList.add(error);
   }
 
-  public boolean isError(){
+  public boolean isError() {
 
     return !this.errorsList.isEmpty();
   }

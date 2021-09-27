@@ -1,5 +1,10 @@
 # WebFlux With Several Data-Sources Example
 
+## News
+2021-09-27: Error processing updated with Errors instance aggregated in all *Res classes
+2021-09-23: Blocking barrier changed on favor of Mono.zip and correct error processing (for Book entity only)
+
+## About
 Usually in standard web applications we are working with one data-source. It can be a database, or queue, or even file storage. But what should we do if we are receiving data from several data sources? If it’ll be two different databases or two other services from which data flow into a product, it can be called step-by-step:
 ```java
 Result1 result1 = datasource1.call();

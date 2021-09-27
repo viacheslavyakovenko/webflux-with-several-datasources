@@ -3,7 +3,7 @@ package com.wfwsds.model;
 public class BookRes implements ExternalDataRes {
 
   public static final BookRes BOOK_RES_ERROR
-      = new BookRes(new Errors("Contain error!"));
+      = new BookRes(Errors.DEFAULT);
 
   private Integer bookId;
   private String authorName;
@@ -21,7 +21,7 @@ public class BookRes implements ExternalDataRes {
     this.errors = null;
   }
 
-  public BookRes(Errors error){
+  public BookRes(Errors error) {
     this.errors = error;
   }
 
@@ -37,12 +37,16 @@ public class BookRes implements ExternalDataRes {
     return title;
   }
 
+  public Errors getErrors() {
+    return errors;
+  }
+
   @Override
   public String toString() {
 
-    if (this.errors != null && this.errors.isError()){
-      return "BookRes{" +
-          "errors=" + this.errors;
+    if (this.errors != null && this.errors.isError()) {
+      return "BookRes{"
+          + this.errors + "}";
     }
 
     return "BookRes{" +
