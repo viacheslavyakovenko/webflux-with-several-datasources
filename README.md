@@ -1,7 +1,8 @@
 # WebFlux With Several Data-Sources Example
 
 ## News
-2021-09-27: Error processing updated with Errors instance aggregated in all *Res classes
+2021-09-27: Error processing updated with Errors instance aggregated in all XxRes classes
+
 2021-09-23: Blocking barrier changed on favor of Mono.zip and correct error processing (for Book entity only)
 
 ## About
