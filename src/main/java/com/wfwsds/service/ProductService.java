@@ -54,8 +54,9 @@ public class ProductService {
 
     List<Mono<ExternalDataRes>> monos = new ArrayList<>();
 
-    monos.add((Mono<ExternalDataRes>) connectionFactory
-        .postUserData(new UserReq("100500", "testName", "testLastName")));
+//    monos.add((Mono<ExternalDataRes>) connectionFactory
+//        .postUserData(new UserReq("100500", "testName", "testLastName")));
+    monos.add((Mono<ExternalDataRes>) connectionFactory.userData());
     monos.add((Mono<ExternalDataRes>) connectionFactory.statisticData());
     monos.add((Mono<ExternalDataRes>) connectionFactory.creditCardData());
     monos.add((Mono<ExternalDataRes>) connectionFactory.bookData());
