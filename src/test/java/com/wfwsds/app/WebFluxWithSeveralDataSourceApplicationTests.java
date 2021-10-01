@@ -3,18 +3,17 @@ package com.wfwsds.app;
 import com.wfwsds.model.ExternalDataRes;
 import com.wfwsds.model.ProductDto;
 import com.wfwsds.model.UserReq;
-import com.wfwsds.service.ProductService;
 import com.wfwsds.service.ConnectionFactory;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.wfwsds.service.ProductService;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class WebFluxWithSeveralDataSourceApplicationTests {
 
