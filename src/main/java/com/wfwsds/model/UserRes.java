@@ -4,6 +4,9 @@ public class UserRes implements ExternalDataRes {
 
   public static final UserRes USER_RES_ERROR
       = new UserRes(Errors.DEFAULT);
+  public static final UserRes USER_RES_TIMEOUT
+      = new UserRes(Errors.TIMEOUT);
+
 
   private String userId;
   private String firstName;

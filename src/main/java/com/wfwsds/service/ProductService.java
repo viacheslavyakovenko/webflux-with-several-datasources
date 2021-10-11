@@ -3,7 +3,6 @@ package com.wfwsds.service;
 import com.wfwsds.adapter.ExternalDataResAdapter;
 import com.wfwsds.model.ExternalDataRes;
 import com.wfwsds.model.ProductDto;
-import com.wfwsds.model.UserReq;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -54,8 +53,9 @@ public class ProductService {
 
     List<Mono<ExternalDataRes>> monos = new ArrayList<>();
 
-    monos.add((Mono<ExternalDataRes>) connectionFactory
-        .postUserData(new UserReq("100500", "testName", "testLastName")));
+//    monos.add((Mono<ExternalDataRes>) connectionFactory
+//        .postUserData(new UserReq("100500", "testName", "testLastName")));
+    monos.add((Mono<ExternalDataRes>) connectionFactory.userData());
     monos.add((Mono<ExternalDataRes>) connectionFactory.statisticData());
     monos.add((Mono<ExternalDataRes>) connectionFactory.creditCardData());
     monos.add((Mono<ExternalDataRes>) connectionFactory.bookData());

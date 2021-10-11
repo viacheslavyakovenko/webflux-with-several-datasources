@@ -23,6 +23,10 @@ public class ConnectionFactory {
         .retrieve()
         .bodyToMono(UserRes.class)
         .timeout(Duration.ofMillis(1000L))
+        .onErrorResume(java.util.concurrent.TimeoutException.class, exception -> {
+          // you can read more about timeout exception handling: https://www.baeldung.com/spring-webflux-timeout
+          return Mono.just(UserRes.USER_RES_TIMEOUT);
+        })
         .onErrorResume(throwable -> {
           return Mono.just(UserRes.USER_RES_ERROR);
         })

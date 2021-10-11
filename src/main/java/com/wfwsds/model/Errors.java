@@ -6,6 +6,8 @@ import java.util.List;
 public class Errors {
 
   public static Errors DEFAULT = new Errors("Contains error!");
+  public static Errors TIMEOUT = new Errors("Timeout occurred!");
+
 
   private final List<String> errorsList;
 
